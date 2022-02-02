@@ -12,4 +12,4 @@ load-module module-loopback latency_msec=%INPUT_LATENCY% source="balena-sound.in
 load-module module-loopback latency_msec=%OUTPUT_LATENCY% source="balena-sound.output.monitor" %OUTPUT_SINK%
 
 # Route all plugin input to the default sink
-set-default-sink balena-sound.input
+set-default-sink balena-sound.output
