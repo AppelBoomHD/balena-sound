@@ -26,12 +26,12 @@ function route_input_sink() {
 
   case "${options[$MODE]}" in
     ${options["STANDALONE"]} | ${options["MULTI_ROOM_CLIENT"]})
-      sed -i "s/%INPUT_SINK%/sink='balena-sound.output'/" "$CONFIG_FILE"
+      sed -i "s/%INPUT_SINK%/sink=balena-sound.output/" "$CONFIG_FILE"
       echo "Routing 'balena-sound.input' to 'balena-sound.output'."
       ;;
 
     ${options["MULTI_ROOM"]} | *)
-      sed -i "s/%INPUT_SINK%/sink=\"snapcast\"/" "$CONFIG_FILE"
+      sed -i "s/%INPUT_SINK%/sink=snapcast/" "$CONFIG_FILE"
       echo "Routing 'balena-sound.input' to 'snapcast'."
       ;;
   esac
@@ -44,7 +44,7 @@ function route_input_source() {
   if [[ -n "$INPUT_DEVICE" ]]; then
     local INPUT_DEVICE_FULLNAME="alsa_input.$INPUT_DEVICE.analog-stereo"
     echo "Routing audio from '$INPUT_DEVICE_FULLNAME' into 'balena-sound.input sink'"
-    echo -e "\nload-module module-loopback source='$INPUT_DEVICE_FULLNAME' sink='balena-sound.input'" >> "$CONFIG_FILE"
+    echo -e "\nload-module module-loopback source=$INPUT_DEVICE_FULLNAME sink=balena-sound.input" >> "$CONFIG_FILE"
   fi
 
 }
@@ -60,7 +60,7 @@ function route_output_sink() {
     OUTPUT=$(cat "$SINK_FILE")
   fi
   OUTPUT="${OUTPUT:-0}"
-  sed -i "s/%OUTPUT_SINK%/sink=\"$OUTPUT\"/" "$CONFIG_FILE"
+  sed -i "s/%OUTPUT_SINK%/sink=$OUTPUT/" "$CONFIG_FILE"
   echo "Routing 'balena-sound.output' to '$OUTPUT'."
 }
 
@@ -94,11 +94,5 @@ set_loopback_latency "OUTPUT_LATENCY" "$SOUND_OUPUT_LATENCY"
 if [[ -n "$SOUND_ENABLE_SOUNDCARD_INPUT" ]]; then
   route_input_source
 fi
-
-# openFleets: configure hostname
-curl -sX PATCH --header "Content-Type:application/json" \
-    --data '{"network": {"hostname": "balena"}}' \
-    "$BALENA_SUPERVISOR_ADDRESS/v1/device/host-config?apikey=$BALENA_SUPERVISOR_API_KEY" \
-    --output /dev/null
 
 exec pulseaudio
