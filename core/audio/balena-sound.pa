@@ -15,4 +15,5 @@ load-module module-loopback latency_msec=%INPUT_LATENCY% source=balena-sound.inp
 load-module module-loopback latency_msec=%OUTPUT_LATENCY% source=balena-sound.output.monitor %OUTPUT_SINK%
 
 # Suspend sink when audio stream is idle
+pa_disable_module module-suspend-on-idle
 load-module module-suspend-on-idle timeout=5
